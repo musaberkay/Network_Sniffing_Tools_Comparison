@@ -28,7 +28,27 @@ class Comparator():
         self.comparator_ui.socket_detail_box.setText(self.socket_packet_list[self.comparator_ui.socket_table.currentRow()]["Details"])
 
     def sniff(self):
-        self.socket_packet_list = socket_sniffer.start_sniff(self.comparator_ui.packet_count_box.value(), self.comparator_ui.create_pcap_box.isChecked())
+        self.comparator_ui.create_pcap_box.setEnabled(True)
+        self.comparator_ui.sniff_but.setEnabled(True)
+        self.comparator_ui.packet_count_box.setEnabled(True)
+        self.comparator_ui.sniff_table.setEnabled(True)
+
+        self.comparator_ui.socket_table.setRowCount(0)
+        self.comparator_ui.scapy_table.setRowCount(0)
+        self.comparator_ui.pyshark_table.setRowCount(0)
+
+        threads_list = []
+        results = [None] * 3
+
+        threads_list.append(Thread(target=socket_sniffer.start_sniff, args=(self.comparator_ui.packet_count_box.value(), self.comparator_ui.create_pcap_box.isChecked(), results, 0)))
+
+        for i in threads_list:
+            i.start()
+
+        for i in threads_list:
+            i.join()
+
+        self.socket_packet_list = results[0]
 
         for packet in self.socket_packet_list:
             row_position = self.comparator_ui.socket_table.rowCount()

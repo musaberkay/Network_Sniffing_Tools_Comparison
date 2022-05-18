@@ -2,7 +2,7 @@ from scapy.all import *
 
 def custom_action(packet):
     print("asd")
-    print(type(packet))
+    print(packet)
 
 def start_sniff(count_, interface):
     return sniff(count=count_, iface=interface, prn=custom_action)

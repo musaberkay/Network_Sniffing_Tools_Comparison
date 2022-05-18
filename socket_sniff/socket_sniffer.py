@@ -26,7 +26,7 @@ DATA_TAB_3 = '\t\t\t   '
 DATA_TAB_4 = '\t\t\t\t   '
 
 
-def start_sniff(count_, save_pcap=False):
+def start_sniff(count_, save_pcap, result_, index_):
     conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
 
     if save_pcap:
@@ -62,7 +62,7 @@ def start_sniff(count_, save_pcap=False):
 
             data_info["Source IP"] = ipv4.src
             data_info["Destination IP"] = ipv4.target
-            data_info["Packet Length"] = str(ipv4.header_length)
+            data_info["Packet Length"] = str(len(raw_data))
 
             # ICMP
             if ipv4.proto == 1:
@@ -125,6 +125,9 @@ def start_sniff(count_, save_pcap=False):
         else:
             continue
 
+        if eth.dest_mac == "00:00:00:00:00:00" and eth.src_mac == "00:00:00:00:00:00":
+            data_info["Protocol"] = "DNS"
+
         capture_count += 1
         data_info["Details"] = data_explanation
         processed_data.append(data_info)
@@ -132,4 +135,5 @@ def start_sniff(count_, save_pcap=False):
     if save_pcap:
         pcap.close()
 
+    result_[index_] = processed_data
     return processed_data
