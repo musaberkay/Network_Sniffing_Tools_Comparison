@@ -18,6 +18,9 @@ def start_sniff(count_, save_pcap, interface_, result_, index_):
                     "Protocol": packet.highest_layer,
                     "Details": str(packet)}
 
+        if data_info["Protocol"] == "DATA":
+            data_info["Protocol"] = packet.layers[-2].layer_name.upper()
+
         processed_data.append(data_info)
 
     for i in range(len(processed_data)-1, -1, -1):
