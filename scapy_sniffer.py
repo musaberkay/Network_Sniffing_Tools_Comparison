@@ -16,7 +16,12 @@ def start_sniff(count_, save_pcap, interface, result_, index_):
         data_info["Source IP"] = packet[IP].src
         data_info["Destination IP"] = packet[IP].dst
         data_info["Packet Length"] = str(len(packet))
-        data_info["Protocol"] = packet.getlayer(2).name
+        try:
+            data_info["Protocol"] = packet.getlayer(3).name
+            if data_info["Protocol"] in ["Raw","Padding"]:
+                data_info["Protocol"] = packet.getlayer(2).name
+        except:
+            data_info["Protocol"] = packet.getlayer(2).name
         data_info["Details"] = packet.show(dump=True)
         processed_data.append(data_info)
         count += 1

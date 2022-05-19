@@ -58,7 +58,6 @@ class Ui_Form(object):
         self.socket_tab.setObjectName("socket_tab")
         self.socket_table = QtWidgets.QTableWidget(self.socket_tab)
         self.socket_table.setGeometry(QtCore.QRect(0, 0, 741, 231))
-        self.socket_table.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.socket_table.setObjectName("socket_table")
         self.socket_table.setColumnCount(5)
         self.socket_table.setRowCount(0)
