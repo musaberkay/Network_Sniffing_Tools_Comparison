@@ -3,6 +3,8 @@
 ## Requirements
 - Use a Linux distribution (Windows causes permission issues)
 - Download thshark (Required to use the Pyshark module)
+  - sudo apt update
+  - sudo apt install tshark
 - Run the program with "sudo" (e.g. sudo python3 packet)
 
 ## Program Workflow
