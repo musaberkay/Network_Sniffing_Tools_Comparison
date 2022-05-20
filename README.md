@@ -4,6 +4,7 @@ This repo includes the CS 350 Operating Systems course's project codes. We build
 
 ## Requirements
 - Use a Linux distribution (Windows causes permission issues)
+- Download Pyshark and Scapy modules using pip
 - Download thshark (Required to use the Pyshark module)
   - sudo apt update
   - sudo apt install tshark
