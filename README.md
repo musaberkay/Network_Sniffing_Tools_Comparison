@@ -5,7 +5,7 @@
 - Download thshark (Required to use the Pyshark module)
   - sudo apt update
   - sudo apt install tshark
-- Run the program with "sudo" (e.g. sudo python3 packet)
+- Run the program with "sudo" (e.g. sudo python3 sniffer_comparison.py)
 
 ## Program Workflow
 - Type the network interface name to the related text input (default is "enp0s3" which works fine with Ubuntu)
