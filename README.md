@@ -1,4 +1,6 @@
-# Network_Sniffign_Tools_Comparison
+# Network Sniffign Tools Comparison
+
+This repo includes the CS 350 Operating Systems course's project codes. We build a program that compares the performances of Socket, Pyshark, and Scapy libraries in network sniffing. The program has a GUI built with PyQt5
 
 ## Requirements
 - Use a Linux distribution (Windows causes permission issues)
