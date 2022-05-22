@@ -8,6 +8,8 @@ def start_sniff(count_, save_pcap, interface, result_, index_):
     packets = sniff(iface=interface, count=count_)
     count=0
     total_time = 0
+    total_log_info = 0
+    protocol_types = {}
 
     for packet in packets:
         if count==0:
@@ -27,11 +29,18 @@ def start_sniff(count_, save_pcap, interface, result_, index_):
         except:
             data_info["Protocol"] = packet.getlayer(2).name
         data_info["Details"] = packet.show(dump=True)
+
+        total_log_info += len(data_info["Details"].encode('utf-8'))
+
+        if data_info["Protocol"] not in list(protocol_types.keys()):
+            protocol_types[data_info["Protocol"]] = 0
+        protocol_types[data_info["Protocol"]] += 1
+
         processed_data.append(data_info)
         count += 1
 
     if save_pcap:
         wrpcap("scapy_capture.pcap", packets)
     
-    result_[index_] = (processed_data, round(total_time, 2))
+    result_[index_] = (processed_data, round(total_time, 2), total_log_info, protocol_types)
     return processed_data

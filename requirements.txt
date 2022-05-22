@@ -1,3 +1,7 @@
+fpdf==1.7.2
+matplotlib==3.5.2
+numpy==1.22.3
+pandas==1.4.2
 PyQt5==5.15.6
 pyshark==0.4.5
 scapy==2.4.5

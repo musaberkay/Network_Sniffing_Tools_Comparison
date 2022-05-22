@@ -10,7 +10,11 @@ def start_sniff(count_, save_pcap, interface_, result_, index_):
 
     captured_packets = capture.sniff_continuously(packet_count=count_)
 
+    total_log_info = 0
+    protocol_types = {}
+
     for packet in captured_packets:
+
         data_info = {"Source IP": packet.ip.src,
                     "Destination IP": packet.ip.dst,
                     "Time(ms)": packet.sniff_timestamp,
@@ -20,6 +24,12 @@ def start_sniff(count_, save_pcap, interface_, result_, index_):
 
         if data_info["Protocol"] == "DATA":
             data_info["Protocol"] = packet.layers[-2].layer_name.upper()
+
+        total_log_info += len(data_info["Details"])
+
+        if data_info["Protocol"] not in list(protocol_types.keys()):
+            protocol_types[data_info["Protocol"]] = 0
+        protocol_types[data_info["Protocol"]] += 1
 
         processed_data.append(data_info)
 
@@ -31,9 +41,9 @@ def start_sniff(count_, save_pcap, interface_, result_, index_):
 
     total_time = 0
     for packet in processed_data:
-        total_time += float(packet["Time(ms)"])
+        total_time += float(packet["Time(ms)"].encode('utf-8'))
 
-    result_[index_] = (processed_data, round(total_time, 2))
+    result_[index_] = (processed_data, round(total_time, 2), total_log_info, protocol_types)
     return processed_data
 
 #a = start_sniff(5,False,"enp0s3", [None]*3,2)

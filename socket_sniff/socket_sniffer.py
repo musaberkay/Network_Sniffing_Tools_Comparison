@@ -35,6 +35,8 @@ def start_sniff(count_, save_pcap, result_, index_):
     capture_count = 0
     processed_data = []
     total_time = 0
+    total_log_info = 0
+    protocol_types = {}
 
     while capture_count < count_:
         start_time = time.time()
@@ -132,10 +134,16 @@ def start_sniff(count_, save_pcap, result_, index_):
 
         capture_count += 1
         data_info["Details"] = data_explanation
+        total_log_info += len(data_info["Details"].encode('utf-8'))
+
+        if data_info["Protocol"] not in list(protocol_types.keys()):
+            protocol_types[data_info["Protocol"]] = 0
+        protocol_types[data_info["Protocol"]] += 1
+
         processed_data.append(data_info)
 
     if save_pcap:
         pcap.close()
 
-    result_[index_] = (processed_data, round(total_time, 2))
+    result_[index_] = (processed_data, round(total_time, 2), total_log_info, protocol_types)
     return processed_data
