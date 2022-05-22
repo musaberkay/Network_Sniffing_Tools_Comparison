@@ -34,11 +34,13 @@ def start_sniff(count_, save_pcap, result_, index_):
 
     capture_count = 0
     processed_data = []
+    total_time = 0
 
     while capture_count < count_:
         start_time = time.time()
         raw_data, addr = conn.recvfrom(65535)
         finish_time = time.time()
+        total_time += (finish_time-start_time)*1000
         data_info = {"Time(ms)": str(round((finish_time-start_time)*1000, 2))}
 
         if save_pcap:
@@ -135,5 +137,5 @@ def start_sniff(count_, save_pcap, result_, index_):
     if save_pcap:
         pcap.close()
 
-    result_[index_] = processed_data
+    result_[index_] = (processed_data, round(total_time, 2))
     return processed_data

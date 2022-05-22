@@ -29,7 +29,11 @@ def start_sniff(count_, save_pcap, interface_, result_, index_):
             continue
         processed_data[i]["Time(ms)"] = str(round((float(processed_data[i]["Time(ms)"]) - float(processed_data[i-1]["Time(ms)"]))*1000, 2))
 
-    result_[index_] = processed_data
+    total_time = 0
+    for packet in processed_data:
+        total_time += float(packet["Time(ms)"])
+
+    result_[index_] = (processed_data, round(total_time, 2))
     return processed_data
 
 #a = start_sniff(5,False,"enp0s3", [None]*3,2)

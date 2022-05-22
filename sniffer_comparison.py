@@ -1,6 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from QT_designs import main_ui
 
+from pathlib import Path
+from fpdf import FPDF
+import matplotlib.pyplot as plt
+import numpy as np
+
 import sys
 import os
 from threading import Thread
@@ -59,9 +64,13 @@ class Comparator():
         for i in threads_list:
             i.join()
 
-        self.socket_packet_list = results[0]
-        self.scapy_packet_list = results[1]
-        self.pyshark_packet_list = results[2]
+        self.socket_packet_list = results[0][0]
+        self.scapy_packet_list = results[1][0]
+        self.pyshark_packet_list = results[2][0]
+
+        self.socket_total_time = results[0][1]
+        self.scapy_total_time = results[1][1]
+        self.pyshark_total_time = results[2][1]
 
         for packet in self.socket_packet_list:
             row_position = self.comparator_ui.socket_table.rowCount()
@@ -93,5 +102,28 @@ class Comparator():
             self.comparator_ui.pyshark_table.setItem(row_position, 3, QtWidgets.QTableWidgetItem(packet["Protocol"]))
             self.comparator_ui.pyshark_table.setItem(row_position, 4, QtWidgets.QTableWidgetItem(packet["Packet Length"]))
 
+        self.create_report()
+
+    def create_report(self):
+        Path("./images").mkdir(parents=True, exist_ok=True)
+
+        #sniffinf time comparison
+        labels = ["Socket", "Scapy", "Pyshark"]
+        sniffing_speeds = [self.socket_total_time, self.scapy_total_time, self.pyshark_total_time]
+        y_pos = np.arange(len(labels))  # the label locations
+        plt.bar(y_pos, sniffing_speeds, align='center', alpha=0.5, width=0.25)
+        plt.xticks(y_pos, labels)
+        plt.legend()
+        plt.ylabel('Sniffing Time (ms)')
+        plt.title('Sniffing Time Comparison')
+        plt.savefig("./images/sniffing_time_comparison.png")
+
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", "B", size = 20)
+        pdf.cell(75, 10, "Comparison results of the Socket, Pyshark and Scapy")
+        pdf.cell(-75, 40)
+        pdf.image('./images/sniffing_time_comparison.png', x = None, y = None, w = 0, h = 0, type = '', link = '')
+        pdf.output("Report.pdf", "F")
 
 c = Comparator()
