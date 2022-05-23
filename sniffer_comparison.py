@@ -55,6 +55,7 @@ class Comparator():
 
         threads_list = []
         results = [None] * 3
+        self.thread_ids = []
 
         threads_list.append(Thread(target=socket_sniffer.start_sniff, args=(self.comparator_ui.packet_count_box.value(), self.comparator_ui.create_pcap_box.isChecked(), results, 0)))
         threads_list.append(Thread(target=scapy_sniffer.start_sniff, args=(self.comparator_ui.packet_count_box.value(), self.comparator_ui.create_pcap_box.isChecked(), self.comparator_ui.interface_name_label.text(), results, 1)))
@@ -62,6 +63,7 @@ class Comparator():
 
         for i in threads_list:
             i.start()
+            self.thread_ids.append(i.ident)
 
         for i in threads_list:
             i.join()
@@ -154,7 +156,7 @@ class Comparator():
         df['Module Name'] = module_list
         packet_count = self.comparator_ui.packet_count_box.value()
         df['Packet Count'] = [packet_count]*3
-        df['Thread ID'] = [0, 1, 2]
+        df['Thread ID'] = self.thread_ids
         pdf.set_xy(0, 0)
         pdf.set_font('arial', 'B', 12)
         pdf.cell(60)
